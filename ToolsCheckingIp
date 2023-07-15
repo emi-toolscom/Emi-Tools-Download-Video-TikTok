@@ -1,0 +1,64 @@
+from tkinter import *
+import requests
+import pyperclip
+
+root = Tk()
+root.title("Tools Checking Ip By Admin-YG")
+root.geometry("550x200")
+root.iconbitmap("Logo/Admin-YG.ico")
+root.resizable(False, False)
+root.configure(bg='#2E86C1')
+
+
+
+def info():
+    root.update()
+    Output_results.delete(1.0, END)
+
+    try:
+        ip1= "https://icanhazip.com/"
+        response1 = requests.get(ip1).text
+        label.config(text="My IP : "+str(response1))
+        pyperclip.copy(response1)
+        ip = Output_results.get("1.0", "end-1c")
+        response = requests.get(url=f"http://ip-api.com/json/{ip}").json()
+        data = {
+            " 0=> My IP ":response.get("query"),
+            " 1=> Country ":response.get("country"),
+            " 2=> Region ":response.get("regionName"),
+            " 3=> City ":response.get("city"),
+            " 4=> Zip-code ":response.get("zip"),
+            " 5=> Latitude ":response.get("lat"),
+            " 6=> Longitude ":response.get("lon"),
+            " 7=> Timezone ":response.get("timezone"),
+            " 8=> Provider ":response.get("isp"),
+            " 9=> Organization ":response.get("org")
+        }
+        for k, e in data.items():
+            show_info = (f"{k}: {e}")
+            Output_results.insert(END,show_info+str("\n"))
+        print("")
+    except Exception as e:
+        print(f"[bold red]An '{e}' error occurred")
+myfram1 = Frame(root)
+myscrollbar1 = Scrollbar(myfram1, orient=VERTICAL)
+Output_results = Text(myfram1, height = 30,width = 35,fg="#FFFFFF",bg = "#064066" ,font='none 12 bold ',yscrollcommand=myscrollbar1.set)
+myscrollbar1.config(command=Output_results.yview)
+myscrollbar1.pack(side=RIGHT, fill=Y)
+myfram1.place(x = 0,y = 0)
+Output_results.pack(pady=1)
+
+label=Label(root, text="",bg="#2E86C1",fg="#FFFFFF",font='none 12 bold italic', justify=RIGHT)
+label.place(x = 355,y =150)
+
+label1 = Label(root,fg='#FFFFFF',bg='#2E86C1', text = 'Admin-YG',font='none 15 bold ')                    
+label1.place(x = 390,y =30)
+
+label2 = Label(root,fg='#FFFFFF',bg='#2E86C1', text = 'Admin-YG',font='none 15 bold ')                    
+label2.place(x = 390,y =30)
+
+BTN = Button(root, height = 2,width = 25,bg='Green',fg='Light Green',text ="START IP ",command=info)
+BTN.place(x = 350,y = 80)
+
+root.mainloop()  
+
